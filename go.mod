@@ -1,4 +1,4 @@
-module xorm-plus
+module github.com/druidcaesa/xorm-plus
 
 go 1.19
 
