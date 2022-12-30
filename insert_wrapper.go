@@ -5,14 +5,14 @@ import (
 )
 
 type InsertWrapper[T any] struct {
-	db   *xorm.Engine
+	DB   *xorm.Engine
 	isTx bool
 }
 
 // NewInsertWrapper 创建构造器
 func NewInsertWrapper[T any]() *InsertWrapper[T] {
 	w := &InsertWrapper[T]{
-		db: Engine,
+		DB: Engine,
 	}
 	return w
 }
@@ -26,7 +26,7 @@ func (u *InsertWrapper[T]) OpenTX() *InsertWrapper[T] {
 // Insert 添加数据
 func (u *InsertWrapper[T]) Insert(t *T) (int64, error) {
 	if u.isTx {
-		session := u.db.NewSession()
+		session := u.DB.NewSession()
 		session.Begin()
 		insert, err := session.Insert(t)
 		if err != nil {
@@ -36,7 +36,7 @@ func (u *InsertWrapper[T]) Insert(t *T) (int64, error) {
 		session.Commit()
 		return insert, nil
 	}
-	insert, err := u.db.Insert(t)
+	insert, err := u.DB.Insert(t)
 	if err != nil {
 		return 0, err
 	}
@@ -46,7 +46,7 @@ func (u *InsertWrapper[T]) Insert(t *T) (int64, error) {
 // CreateInBatches 批量添加
 func (u *InsertWrapper[T]) CreateInBatches(list []*T) (int64, error) {
 	if u.isTx {
-		session := u.db.NewSession()
+		session := u.DB.NewSession()
 		session.Begin()
 		insert, err := session.Insert(list)
 		if err != nil {
@@ -56,7 +56,7 @@ func (u *InsertWrapper[T]) CreateInBatches(list []*T) (int64, error) {
 		session.Commit()
 		return insert, nil
 	}
-	insert, err := u.db.Insert(list)
+	insert, err := u.DB.Insert(list)
 	if err != nil {
 		return 0, nil
 	}
